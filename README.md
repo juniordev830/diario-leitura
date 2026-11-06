@@ -1,48 +1,35 @@
-# Diário de Leitura
+# Diário de Leitura — Rails API MVP
 
-> Status: concepção. Este repositório contém apenas o escopo inicial; ainda não há aplicação executável ou funcionalidades implementadas.
+API em **Ruby on Rails 7.2 e SQLite** para acompanhar livros, metas e sessões de leitura.
 
-## Ideia
+## Funcionalidades
+- Criar livro com título, total de páginas e meta opcional.
+- Listar livros e consultar percentual de progresso.
+- Registrar sessões com última página lida e anotação.
+- Impedir regressão de página e leitura acima do total.
+- Persistência SQLite e teste de integração cobrindo duas sessões.
 
-Registrar leituras e notas para acompanhar aprendizado ao longo do tempo.
+## Executar
+Requer Ruby 3.3 e Bundler:
+```bash
+bundle install
+bundle exec rails db:prepare
+bundle exec rails server
+```
+API local padrão: http://localhost:3000
 
-## Primeira versão planejada
+## Endpoints
+- `GET /health`
+- `GET /books`
+- `POST /books` — `{"title":"Livro exemplo","total_pages":120,"goal_pages":100}`
+- `GET /books/:id`
+- `POST /books/:book_id/sessions` — `{"ending_page":20,"note":"Primeira leitura"}`
 
-- [ ] Cadastrar um livro e meta de leitura.
-- [ ] Registrar sessões e páginas lidas.
-- [ ] Consultar progresso e notas.
+## Testes
+```bash
+RAILS_ENV=test bundle exec rails db:prepare
+RAILS_ENV=test bundle exec rails test
+```
 
-## Modelo inicial
-
-Livro, sessão de leitura e anotação.
-
-## Regras e limites
-
-Página atual deve ficar entre zero e o total do livro.
-
-Escopo mantido pequeno: sem pagamentos, integrações externas, infraestrutura de produção ou uso de dados pessoais reais nesta etapa.
-
-## Tecnologia proposta
-
-Ruby + Rails + SQLite.
-
-A escolha é uma proposta para a futura implementação; nenhuma dependência foi instalada e a tecnologia ainda não foi implementada.
-
-## Critério de conclusão do primeiro incremento
-
-Duas sessões válidas devem atualizar o progresso sem ultrapassar o total de páginas.
-
-## Próximos passos
-
-1. Revisar este escopo antes de começar a implementação.
-2. Preparar o ambiente mínimo da tecnologia escolhida.
-3. Implementar um fluxo completo e validar o critério acima.
-4. Documentar a execução e acrescentar exemplos demonstrativos.
-
-## Possíveis evoluções
-
-Depois de validar o fluxo principal, avaliar persistência, acessibilidade e uma interface mais completa conforme a plataforma. Evoluções não fazem parte da entrega atual.
-
-## Como executar
-
-Ainda não há comandos de execução. Eles serão adicionados quando existir uma primeira versão funcional.
+## Limitações
+API educacional local sem contas de usuário, frontend, autenticação ou hospedagem. Não publique na internet antes de acrescentar autenticação, autorização e segurança de produção. Em produção, configure `SECRET_KEY_BASE` forte e proteção dos dados.
