@@ -7,13 +7,22 @@ on:
       - "feat/**"
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.2", "3.3", "3.4"]
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3"
-      - run: ruby -c bin/diario.rb
-      - run: ruby -Itest test/test_diary.rb
+          ruby-version: ${{ matrix.ruby }}
+      - name: Check Ruby syntax
+        run: find bin lib test -name '*.rb' -print0 | xargs -0 -n1 ruby -c
+      - name: Run full Minitest suite
+        run: ruby -Itest -e 'Dir["test/test_*.rb"].sort.each { |file| require File.expand_path(file) }'
