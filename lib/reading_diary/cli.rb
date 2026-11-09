@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
-require_relative "../lib/reading_diary/export"
+require_relative "export"
 
 module ReadingDiary
   module CLI
