@@ -26,7 +26,7 @@ module ReadingDiary
       ReadingDiary.validate!(state)
       check_path!(path)
       parent = File.dirname(File.expand_path(path))
-      raise ReadingDiary::Error, "diretorio de destino inexistente" unless Dir.directory?(parent)
+      raise ReadingDiary::Error, "diretorio de destino inexistente" unless File.directory?(parent)
       serialized = JSON.pretty_generate(state) + "\n"
       raise ReadingDiary::Error, "arquivo muito grande" if serialized.bytesize > MAX_BYTES
       temporary = nil
@@ -56,7 +56,7 @@ module ReadingDiary
       lock_path = "#{path}.lock"
       raise ReadingDiary::Error, "arquivo de trava invalido" if File.symlink?(lock_path)
       parent = File.dirname(File.expand_path(path))
-      raise ReadingDiary::Error, "diretorio de destino inexistente" unless Dir.directory?(parent)
+      raise ReadingDiary::Error, "diretorio de destino inexistente" unless File.directory?(parent)
       File.open(lock_path, File::RDWR | File::CREAT, 0o600) do |lock|
         lock.flock(File::LOCK_EX)
         state = load(path)
@@ -76,7 +76,7 @@ module ReadingDiary
       check_path!(destination)
       raise ReadingDiary::Error, "backup ja existe" if File.exist?(destination)
       parent = File.dirname(File.expand_path(destination))
-      raise ReadingDiary::Error, "diretorio de destino inexistente" unless Dir.directory?(parent)
+      raise ReadingDiary::Error, "diretorio de destino inexistente" unless File.directory?(parent)
       payload = JSON.pretty_generate(state) + "\n"
       created = false
       begin
