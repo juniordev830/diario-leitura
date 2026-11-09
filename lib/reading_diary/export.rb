@@ -72,7 +72,7 @@ module ReadingDiary
       ReadingDiary::Storage.check_path!(path)
       raise ReadingDiary::Error, "destino ja existe" if File.exist?(path)
       parent = File.dirname(File.expand_path(path))
-      raise ReadingDiary::Error, "diretorio de destino inexistente" unless Dir.directory?(parent)
+      raise ReadingDiary::Error, "diretorio de destino inexistente" unless File.directory?(parent)
       raise ReadingDiary::Error, "exportacao muito grande" if payload.bytesize > ReadingDiary::Storage::MAX_BYTES
       created = false
       begin
