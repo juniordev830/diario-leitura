@@ -1,6 +1,6 @@
 # Diário de Leitura
 
-> Status: concepção. Este repositório contém apenas o escopo inicial; ainda não há aplicação executável ou funcionalidades implementadas.
+> Estado atualizado nesta branch: núcleo de domínio Ruby executável, com testes automatizados. A aplicação Rails, interface e persistência SQLite continuam planejadas.
 
 ## Ideia
 
@@ -50,3 +50,18 @@ Ainda não há comandos de execução. Eles serão adicionados quando existir um
 ## Documentação de desenvolvimento
 
 O [guia de validação e evolução](docs/PRIMEIRO_INCREMENTO.md) registra o estado atual, os testes e os próximos incrementos deste projeto.
+
+## Núcleo Ruby implementado nesta branch
+
+O arquivo `lib/diario_leitura.rb` modela livros, sessões de leitura, páginas restantes e progresso percentual. Impede que o avanço ultrapasse o total de páginas e valida datas ISO. O exemplo usa somente dados fictícios.
+
+Requer Ruby 3.3 (bibliotecas padrão):
+
+```bash
+ruby bin/exemplo.rb
+ruby -Ilib test/test_diario_leitura.rb
+```
+
+Os testes cobrem conclusão de livro, duas sessões, limite de páginas, data inválida e integridade da lista de sessões. A CI da branch está em `.github/workflows/ruby-test.yml`.
+
+**Limitações:** os registros só vivem em memória durante o processo. Ainda não há Rails, SQLite, interface, cadastro de usuários ou recuperação de dados. A arquitetura prevista no planejamento permanece como próximo passo.
