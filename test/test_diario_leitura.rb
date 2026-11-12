@@ -55,4 +55,17 @@ class DiarioLeituraTest < Minitest::Test
     assert_raises(FrozenError) { livro.sessoes << sessao }
     assert_equal 7, livro.paginas_lidas
   end
+
+  def test_sessoes_exibidas_em_ordem_cronologica_com_empate_estavel
+    livro = novo_livro
+    livro.registrar_sessao(paginas: 10, data: "2026-11-10", nota: "Terceira")
+    livro.registrar_sessao(paginas: 5, data: "2026-11-08", nota: "Primeira")
+    livro.registrar_sessao(paginas: 7, data: "2026-11-10", nota: "Quarta")
+    livro.registrar_sessao(paginas: 3, data: "2026-11-09", nota: "Segunda")
+    assert_equal ["Primeira", "Segunda", "Terceira", "Quarta"], livro.sessoes.map(&:nota)
+    assert_equal 25, livro.paginas_lidas
+    assert_equal 75, livro.paginas_restantes
+    assert_raises(FrozenError) { livro.sessoes.clear }
+  end
+
 end
