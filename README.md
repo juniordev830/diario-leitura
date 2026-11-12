@@ -45,7 +45,7 @@ Depois de validar o fluxo principal, avaliar persistência, acessibilidade e uma
 
 ## Como executar
 
-Ainda não há comandos de execução. Eles serão adicionados quando existir uma primeira versão funcional.
+O núcleo Ruby de linha de comando já pode ser executado com os comandos indicados na seção abaixo. A aplicação Rails, interface e persistência continuam planejadas.
 
 ## Documentação de desenvolvimento
 
@@ -53,7 +53,7 @@ O [guia de validação e evolução](docs/PRIMEIRO_INCREMENTO.md) registra o est
 
 ## Núcleo Ruby implementado nesta branch
 
-O arquivo `lib/diario_leitura.rb` modela livros, sessões de leitura, páginas restantes e progresso percentual. Impede que o avanço ultrapasse o total de páginas e valida datas ISO. O exemplo usa somente dados fictícios.
+O arquivo `lib/diario_leitura.rb` modela livros, sessões de leitura, páginas restantes e progresso percentual. A consulta de sessões apresenta ordem cronológica estável, mesmo quando as datas são registradas fora de ordem. Impede que o avanço ultrapasse o total de páginas e valida datas ISO. O exemplo usa somente dados fictícios.
 
 Requer Ruby 3.3 (bibliotecas padrão):
 
