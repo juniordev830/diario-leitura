@@ -1,0 +1,25 @@
+name: Ruby domain tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Syntax check
+        run: ruby -c lib/diario_leitura.rb && ruby -c test/test_diario_leitura.rb
+      - name: Unit tests
+        run: ruby -Ilib test/test_diario_leitura.rb
+      - name: Demonstration
+        run: ruby bin/exemplo.rb
