@@ -55,8 +55,12 @@ module DiarioLeitura
       paginas_restantes.zero?
     end
 
+    # Exibição cronológica; sessões na mesma data preservam a ordem de registro.
     def sessoes
-      @sessoes.dup.freeze
+      @sessoes.each_with_index
+              .sort_by { |sessao, indice| [sessao.data, indice] }
+              .map(&:first)
+              .freeze
     end
 
     private
