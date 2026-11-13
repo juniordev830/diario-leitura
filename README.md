@@ -50,3 +50,14 @@ Ainda não há comandos de execução. Eles serão adicionados quando existir um
 ## Roteiro de implementação
 
 Os requisitos, modelos e testes propostos estão em [docs/PRIMEIRO_INCREMENTO.md](docs/PRIMEIRO_INCREMENTO.md). Os recursos descritos no guia são planejados, não funcionalidades entregues nesta branch.
+
+## Primeiro incremento executável (em revisão)
+
+Foi implementado um modelo de domínio em Ruby sem dependências externas, com cadastro de livros, metas, sessões, notas, progresso percentual e exportação/importação JSON versionada. Esta etapa **não inclui Rails, servidor web nem SQLite**, que poderão ser adicionados futuramente.
+
+```bash
+ruby bin/demo.rb
+ruby -Itest test/reading_journal_test.rb
+```
+
+Os testes verificam duas sessões válidas, limites de páginas, datas inválidas e restauração do backup. O workflow GitHub Actions valida o incremento no PR.
