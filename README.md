@@ -1,63 +1,45 @@
 # Diário de Leitura
 
-> Status: concepção. Este repositório contém apenas o escopo inicial; ainda não há aplicação executável ou funcionalidades implementadas.
+Biblioteca local em Ruby para registrar livros, metas, sessões de leitura e notas. O núcleo e a demonstração estão implementados; Rails, interface web e SQLite continuam planejados.
 
-## Ideia
+## Recursos implementados
 
-Registrar leituras e notas para acompanhar aprendizado ao longo do tempo.
+- Cadastro de livros com identificador único, total de páginas e meta.
+- Registro de sessões com data, páginas lidas e nota opcional.
+- Consulta de progresso, percentual, meta atingida e notas.
+- Exportação e restauração de backup JSON versionado.
+- Validação de datas, páginas, identificadores e estrutura do backup.
 
-## Primeira versão planejada
+## Executar e testar
 
-- [ ] Cadastrar um livro e meta de leitura.
-- [ ] Registrar sessões e páginas lidas.
-- [ ] Consultar progresso e notas.
-
-## Modelo inicial
-
-Livro, sessão de leitura e anotação.
-
-## Regras e limites
-
-Página atual deve ficar entre zero e o total do livro.
-
-Escopo mantido pequeno: sem pagamentos, integrações externas, infraestrutura de produção ou uso de dados pessoais reais nesta etapa.
-
-## Tecnologia proposta
-
-Ruby + Rails + SQLite.
-
-A escolha é uma proposta para a futura implementação; nenhuma dependência foi instalada e a tecnologia ainda não foi implementada.
-
-## Critério de conclusão do primeiro incremento
-
-Duas sessões válidas devem atualizar o progresso sem ultrapassar o total de páginas.
-
-## Próximos passos
-
-1. Revisar este escopo antes de começar a implementação.
-2. Preparar o ambiente mínimo da tecnologia escolhida.
-3. Implementar um fluxo completo e validar o critério acima.
-4. Documentar a execução e acrescentar exemplos demonstrativos.
-
-## Possíveis evoluções
-
-Depois de validar o fluxo principal, avaliar persistência, acessibilidade e uma interface mais completa conforme a plataforma. Evoluções não fazem parte da entrega atual.
-
-## Como executar
-
-Ainda não há comandos de execução. Eles serão adicionados quando existir uma primeira versão funcional.
-
-## Roteiro de implementação
-
-Os requisitos, modelos e testes propostos estão em [docs/PRIMEIRO_INCREMENTO.md](docs/PRIMEIRO_INCREMENTO.md). Os recursos descritos no guia são planejados, não funcionalidades entregues nesta branch.
-
-## Primeiro incremento executável (em revisão)
-
-Foi implementado um modelo de domínio em Ruby sem dependências externas, com cadastro de livros, metas, sessões, notas, progresso percentual e exportação/importação JSON versionada. Esta etapa **não inclui Rails, servidor web nem SQLite**, que poderão ser adicionados futuramente.
+Requer Ruby; o GitHub Actions valida o projeto com Ruby 3.3.
 
 ```bash
 ruby bin/demo.rb
 ruby -Itest test/reading_journal_test.rb
 ```
 
-Os testes verificam duas sessões válidas, limites de páginas, datas inválidas e restauração do backup. O workflow GitHub Actions valida o incremento no PR.
+A demonstração usa um livro fictício de 120 páginas e registra sessões de 20 e 40 páginas. O resultado mostra 60 páginas lidas, 50% de progresso e a meta de 60 páginas atingida.
+
+## Usar a biblioteca
+
+```ruby
+require_relative 'lib/reading_journal'
+
+journal = ReadingJournal.new
+journal.add_book(id: 'livro', title: 'Livro fictício', total_pages: 120, goal_pages: 60)
+journal.record(id: 'livro', date: '2026-11-10', pages: 20, note: 'Introdução')
+puts journal.progress('livro')
+backup = journal.to_json
+restored = ReadingJournal.from_json(backup)
+```
+
+Cada sessão acrescenta páginas ao progresso. O total acumulado não pode exceder o tamanho do livro. A meta omitida usa o total de páginas.
+
+O retorno de `add_book` é uma cópia congelada: alterações devem passar pelos métodos da biblioteca. Textos armazenados não compartilham referências mutáveis com entradas ou resultados de consultas. Backups com sessões que não sejam objetos são rejeitados com `ArgumentError`.
+
+## Limites
+
+Os dados ficam em memória; a exportação retorna uma string JSON e não grava um arquivo automaticamente. Não há autenticação, sincronização, banco de dados ou interface web. Use dados fictícios nos exemplos e mantenha backups pessoais fora do repositório.
+
+O roteiro histórico está em [docs/PRIMEIRO_INCREMENTO.md](docs/PRIMEIRO_INCREMENTO.md). Recursos futuros ali descritos não representam funcionalidades já entregues.
