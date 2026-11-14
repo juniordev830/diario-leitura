@@ -19,16 +19,18 @@ class ReadingJournal
       raise ArgumentError, 'Dados do livro inválidos'
     end
 
-    goal_pages ||= total_pages
+    goal_pages = total_pages if goal_pages.nil?
     unless goal_pages.is_a?(Integer) && goal_pages.between?(1, total_pages)
       raise ArgumentError, 'Meta fora do total de páginas'
     end
 
     raise ArgumentError, 'ID duplicado' if @books.key?(id)
 
-    @books[id] = Book.new(id: id, title: title.strip, total_pages: total_pages,
+    @books[id] = Book.new(id: id.dup.freeze, title: title.strip.freeze, total_pages: total_pages,
                           goal_pages: goal_pages, current_page: 0, sessions: [])
-    @books[id]
+    snapshot = @books[id].dup
+    snapshot.sessions = [].freeze
+    snapshot.freeze
   end
 
   def record(id:, date:, pages:, note: '')
@@ -50,7 +52,7 @@ class ReadingJournal
     end
 
     book.current_page += pages
-    book.sessions << { date: date, pages: pages, note: note }
+    book.sessions << { date: date.dup.freeze, pages: pages, note: note.dup.freeze }
     progress(id)
   end
 
@@ -100,6 +102,7 @@ class ReadingJournal
                        total_pages: b.fetch('total_pages'),
                        goal_pages: b.fetch('goal_pages'))
       b['sessions'].each do |s|
+        raise ArgumentError, 'Sessão inválida' unless s.is_a?(Hash)
         journal.record(id: b.fetch('id'), date: s.fetch('date'),
                        pages: s.fetch('pages'), note: s.fetch('note'))
       end
@@ -109,3 +112,4 @@ class ReadingJournal
     raise ArgumentError, "Backup inválido: #{e.message}"
   end
 end
+
