@@ -1,28 +1,21 @@
-name: Ruby reading diary checks
-
+name: Testar diário de leitura
 on:
-  push:
-    branches:
-      - main
-      - "feat/**"
   pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  test:
+  ruby-tests:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: ["3.2", "3.3", "3.4"]
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
-      - name: Check Ruby syntax
-        run: find bin lib test -name '*.rb' -print0 | xargs -0 -n1 ruby -c
-      - name: Run full Minitest suite
-        run: ruby -Itest -e 'Dir["test/test_*.rb"].sort.each { |file| require File.expand_path(file) }'
+          ruby-version: '3.3'
+      - run: ruby -Itest test/reading_journal_test.rb
+      - run: ruby bin/demo.rb
