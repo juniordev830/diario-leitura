@@ -10,8 +10,9 @@ module ReadingDiary
   end
 
   def self.books(state)
-    items = state.fetch("books")
-    raise Error, "lista de livros invalida" unless items.is_a?(Array)
+    raise Error, "estado invalido" unless state.is_a?(Hash)
+    items = state.fetch("books") { raise Error, "lista de livros invalida" }
+    raise Error, "lista de livros invalida" unless items.is_a?(Array) && items.length <= 10_000
     items
   end
 
@@ -19,6 +20,7 @@ module ReadingDiary
     raise Error, "identificador invalido" unless id.is_a?(String) && id.match?(/\A[a-z0-9-]{1,50}\z/)
     raise Error, "titulo invalido" unless title.is_a?(String) && !title.strip.empty? && title.size <= 200
     raise Error, "paginas invalidas" unless pages.is_a?(Integer) && pages.positive? && pages <= 100_000
+    raise Error, "limite de livros atingido" if books(state).length >= 10_000
     raise Error, "livro duplicado" if books(state).any? { |book| book["id"] == id }
     book = { "id" => id, "title" => title.strip, "pages" => pages, "current_page" => 0, "sessions" => [] }
     books(state) << book
@@ -37,7 +39,7 @@ module ReadingDiary
     end
     raise Error, "data invalida (AAAA-MM-DD)" unless valid_date.iso8601 == date
     sessions = book.fetch("sessions")
-    raise Error, "historico invalido" unless sessions.is_a?(Array)
+    raise Error, "historico invalido" unless sessions.is_a?(Array) && sessions.length < 100_000
     if sessions.any? && date < sessions.last.fetch("date")
       raise Error, "sessao anterior ao ultimo registro"
     end
