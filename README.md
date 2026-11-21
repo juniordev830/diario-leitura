@@ -139,3 +139,5 @@ O retorno de `add_book` é uma cópia congelada: alterações devem passar pelos
 Os dados ficam em memória; a exportação retorna uma string JSON e não grava um arquivo automaticamente. Não há autenticação, sincronização, banco de dados ou interface web. Use dados fictícios nos exemplos e mantenha backups pessoais fora do repositório.
 
 O roteiro histórico está em [docs/PRIMEIRO_INCREMENTO.md](docs/PRIMEIRO_INCREMENTO.md). Recursos futuros ali descritos não representam funcionalidades já entregues.
+
+A biblioteca `ReadingJournal` mantém as sessões em ordem cronológica, inclusive durante a importação de backups, e estabelece limites de 10.000 livros e 100.000 sessões por livro. O núcleo `ReadingDiary` aplica os mesmos limites de catálogo e histórico e rejeita estados malformados.
