@@ -25,6 +25,7 @@ class ReadingJournal
     end
 
     raise ArgumentError, 'ID duplicado' if @books.key?(id)
+    raise ArgumentError, 'Limite de 10.000 livros atingido' if @books.length >= 10_000
 
     @books[id] = Book.new(id: id.dup.freeze, title: title.strip.freeze, total_pages: total_pages,
                           goal_pages: goal_pages, current_page: 0, sessions: [])
@@ -49,6 +50,13 @@ class ReadingJournal
     end
     unless note.is_a?(String) && note.length <= 1000
       raise ArgumentError, 'Nota inválida'
+    end
+
+    if book.sessions.length >= 100_000
+      raise ArgumentError, 'Limite de sessões atingido'
+    end
+    if !book.sessions.empty? && date < book.sessions.last[:date]
+      raise ArgumentError, 'Sessões devem seguir ordem cronológica'
     end
 
     book.current_page += pages
