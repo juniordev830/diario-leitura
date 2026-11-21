@@ -44,3 +44,14 @@ class ReadingDiaryTest < Minitest::Test
     assert_equal 0, ReadingDiary.summary(@data).first["current_page"]
   end
 end
+
+  def test_rejects_malformed_state_and_oversized_book_catalog
+    assert_raises(ReadingDiary::Error) { ReadingDiary.books(nil) }
+    assert_raises(ReadingDiary::Error) { ReadingDiary.books({}) }
+    assert_raises(ReadingDiary::Error) { ReadingDiary.books({ "books" => [nil] * 10_001 }) }
+    original = @data["books"].length
+    assert_raises(ReadingDiary::Error) do
+      ReadingDiary.add_book({ "books" => [nil] * 10_000 }, id: "novo", title: "Livro", pages: 10)
+    end
+    assert_equal original, @data["books"].length
+  end
