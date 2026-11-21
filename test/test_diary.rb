@@ -43,7 +43,6 @@ class ReadingDiaryTest < Minitest::Test
     end
     assert_equal 0, ReadingDiary.summary(@data).first["current_page"]
   end
-end
 
   def test_rejects_malformed_state_and_oversized_book_catalog
     assert_raises(ReadingDiary::Error) { ReadingDiary.books(nil) }
@@ -55,3 +54,5 @@ end
     end
     assert_equal original, @data["books"].length
   end
+
+end
