@@ -93,7 +93,6 @@ class ReadingJournalTest < Minitest::Test
     end
   end
 
-end
 
 
   def test_rejects_sessions_earlier_than_last_date_without_progress_change
@@ -110,3 +109,5 @@ end
     backup['books'][0]['sessions'] << { 'date' => '2026-11-20', 'pages' => 2, 'note' => '' }
     assert_raises(ArgumentError) { ReadingJournal.from_json(JSON.generate(backup)) }
   end
+
+end
